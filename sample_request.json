@@ -1,0 +1,16 @@
+{
+  "application_id": "A-DEMO-001",
+  "annual_income": 52000,
+  "employment_length_years": 1.5,
+  "home_ownership": "RENT",
+  "loan_purpose": "small_business",
+  "loan_amount": 22000,
+  "term_months": 60,
+  "interest_rate": 0.21,
+  "credit_score": 612,
+  "dti": 34.0,
+  "num_open_accounts": 11,
+  "num_delinquencies_2y": 2,
+  "inquiries_6m": 4,
+  "revolving_utilization": 0.91
+}

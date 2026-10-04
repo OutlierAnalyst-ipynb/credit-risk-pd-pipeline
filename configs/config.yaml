@@ -1,0 +1,40 @@
+project: credit-risk-pd
+seed: 42
+
+paths:
+  raw_applications: data/raw/applications.csv
+  registry: model_registry
+  reports: reports
+  new_applications: data/raw/applications_new.csv
+
+data:
+  n_applications: 60000
+  start_date: "2023-01-01"
+  n_months: 30
+
+split:
+  oot_start: "2025-01-01"     # out-of-time validation: regulators expect OOT performance
+
+model:
+  candidates: [logreg, hgb]
+  primary_metric: roc_auc
+  cv_folds: 4
+  n_iter_search: 8            # RandomizedSearchCV iterations per candidate
+  calibration: isotonic       # PDs must be calibrated: they feed pricing, limits, CECL/IFRS9
+
+scorecard:                    # classic points scaling: score = offset - factor * ln(odds_bad)
+  base_score: 600
+  base_odds: 20               # 20:1 good:bad (PD ~4.8%) at base_score
+  pdo: 20                     # points to double the odds
+
+decision:                     # policy cut-offs on the scorecard scale
+  approve_min_score: 590      # ~PD < 6.5%
+  decline_max_score: 560      # ~PD > 16%; in between -> manual underwriter review
+
+fairness:
+  protected_attribute: age_band   # NOT a model input (ECOA / Reg B); used only for testing
+  min_adverse_impact_ratio: 0.80  # four-fifths rule
+
+monitoring:
+  psi_warn: 0.10
+  psi_alert: 0.25
